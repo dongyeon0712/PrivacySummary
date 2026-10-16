@@ -1,0 +1,309 @@
+<title>Privacy Policy Summary</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: a browser window. The website's privacy policy fills the page; the extension icon on the
+   bookmarks bar opens a summary panel from the right. Panel states: ready -> scanning -> done.
+   Light mode only, by request. */
+:root {
+  --bg: #e9ebf1;
+  --surface: #ffffff;
+  --card: #f4f5f8;
+  --fg: #1c2030;
+  --muted: #5f6577;
+  --line: #e3e5ec;
+  --chrome: #dfe2ea;
+  --violet: #6b5ce7;
+  --violet-soft: #ece9fd;
+  --scan: rgba(107, 92, 231, 0.14);
+  --mark: #fff0b8;
+  --warn: #a4501a;
+  --warn-soft: #fbe9dc;
+  --ok: #1f7a55;
+  --ok-soft: #dff2e9;
+  --font: "Instrument Sans", system-ui, -apple-system, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font); font-size: 15px; line-height: 1.55; padding-inline: 16px; padding-block: 20px 32px; }
+button { font: inherit; color: inherit; }
+button:focus-visible, input:focus-visible, a:focus-visible { outline: 2px solid var(--violet); outline-offset: 2px; }
+
+.browser { max-width: 1240px; margin: 0 auto; background: var(--surface); border: 1px solid #cfd2dc; border-radius: 12px; box-shadow: 0 10px 34px rgba(28, 32, 48, .12); overflow: hidden; }
+
+/* Browser chrome */
+.toolbar { background: var(--chrome); padding: 10px 14px 0; }
+.dots { display: flex; gap: 6px; margin-bottom: 8px; }
+.dots i { width: 11px; height: 11px; border-radius: 50%; background: #b9bdca; }
+.addr { display: flex; align-items: center; gap: 8px; padding-bottom: 8px; }
+.url { flex: 1; min-width: 0; background: var(--surface); border-radius: 999px; padding: 6px 14px; font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.url b { color: var(--fg); font-weight: 500; }
+.bookmarks { display: flex; align-items: center; gap: 4px; padding: 5px 0 7px; font-size: 12.5px; color: var(--muted); border-top: 1px solid #cdd0da; overflow-x: auto; }
+.bm { padding: 3px 9px; border-radius: 6px; white-space: nowrap; }
+.spacer { flex: 1; }
+.ext { position: relative; display: flex; align-items: center; gap: 6px; border: 0; background: none; padding: 4px 10px 4px 6px; border-radius: 8px; cursor: pointer; font-size: 12.5px; font-weight: 500; color: var(--fg); white-space: nowrap; flex: none; }
+.ext:hover { background: rgba(255,255,255,.6); }
+.ext[aria-expanded="true"] { background: var(--surface); }
+.ext .logo { width: 22px; height: 22px; border-radius: 6px; background: var(--violet); color: #fff; display: grid; place-items: center; }
+.ext .logo svg { width: 14px; height: 14px; }
+.ext .tip { position: absolute; right: 0; top: calc(100% + 8px); background: var(--fg); color: #fff; font-size: 12px; padding: 6px 10px; border-radius: 8px; opacity: 0; pointer-events: none; transition: opacity .2s; z-index: 5; }
+.ext.hint .tip { opacity: 1; }
+
+/* Viewport */
+.viewport { position: relative; display: flex; height: 680px; background: var(--surface); overflow: hidden; }
+.site { flex: 1; min-width: 0; overflow: auto; background: var(--surface); }
+.site-nav { display: flex; flex-wrap: wrap; gap: 8px 24px; align-items: center; padding: 16px 40px; border-bottom: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+.site-nav b { color: var(--fg); font-size: 17px; margin-right: auto; }
+.article { max-width: 700px; margin: 0 auto; padding: 36px 40px 64px; }
+.article h1 { font-size: 30px; line-height: 1.2; font-weight: 600; margin: 0 0 6px; }
+.article .upd { color: var(--muted); font-size: 13px; margin: 0 0 24px; }
+.article h2 { font-size: 17px; font-weight: 600; margin: 26px 0 6px; scroll-margin-top: 16px; }
+.article p { margin: 0 0 8px; max-width: 62ch; }
+
+/* Scan states on policy sections */
+.sec { border-radius: 4px; padding: 3px 8px; margin: 0 -8px 6px; transition: filter .4s, opacity .4s, background .4s; }
+.sec[data-state="wait"] { filter: blur(2.5px); opacity: .55; }
+.sec[data-state="scan"] { background: var(--scan); box-shadow: inset 0 2px 0 var(--violet), inset 0 -2px 0 var(--violet); }
+mark { background: transparent; color: inherit; border-radius: 2px; transition: background .4s; }
+.sec[data-state="done"] mark { background: var(--mark); }
+.sec[data-state="done"] mark.risk { background: var(--warn-soft); box-shadow: inset 0 -2px 0 var(--warn); }
+.sec.flash { animation: flash 1.2s ease; }
+@keyframes flash { 0%,100% { background: transparent } 30% { background: var(--violet-soft) } }
+
+/* Side panel */
+.panel { flex: none; width: 0; overflow: hidden; background: var(--surface); border-left: 0 solid var(--line); transition: width .35s ease; }
+.panel.open { width: 420px; border-left-width: 1px; }
+.panel-inner { width: 420px; height: 100%; display: flex; flex-direction: column; }
+.p-head { display: flex; align-items: center; gap: 10px; padding: 16px 20px 12px; }
+.p-head h2 { font-size: 22px; font-weight: 600; margin: 0; }
+.rescan { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 500; padding: 5px 11px; border-radius: 999px; border: 1px solid var(--line); background: var(--surface); cursor: pointer; }
+.rescan svg { width: 14px; height: 14px; }
+.rescan:hover:not(:disabled) { background: var(--violet-soft); border-color: var(--violet); color: var(--violet); }
+.rescan:disabled { color: #a6abb9; cursor: not-allowed; }
+.close { margin-left: auto; border: 0; background: none; width: 30px; height: 30px; border-radius: 8px; cursor: pointer; color: var(--muted); font-size: 20px; line-height: 1; }
+.close:hover { background: var(--card); }
+.p-body { flex: 1; overflow: auto; padding: 4px 20px 24px; }
+.card { background: var(--card); border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; }
+.card h3 { font-size: 15px; font-weight: 600; margin: 0 0 10px; }
+.card p { margin: 0; color: var(--muted); }
+.card p b { color: var(--fg); font-weight: 600; }
+[data-view] { display: none; }
+.panel[data-state="ready"] [data-view="ready"],
+.panel[data-state="scanning"] [data-view="scanning"],
+.panel[data-state="done"] [data-view="done"] { display: block; }
+
+/* Ready */
+.ready { text-align: center; padding: 36px 20px 28px; }
+.ready .badge { width: 56px; height: 56px; margin: 0 auto 16px; border-radius: 16px; background: var(--violet-soft); color: var(--violet); display: grid; place-items: center; }
+.ready .badge svg { width: 28px; height: 28px; }
+.ready h3 { font-size: 18px; font-weight: 600; margin: 0 0 6px; }
+.ready p { color: var(--muted); margin: 0 auto 20px; max-width: 30ch; }
+.ready .page-note { margin: 18px 0 0; font-size: 12px; color: var(--muted); max-width: none; }
+button.primary { font-weight: 600; font-size: 15px; padding: 11px 28px; border-radius: 10px; border: 0; background: var(--violet); color: #fff; cursor: pointer; }
+button.primary:hover { background: #5b4bd8; }
+
+/* Scanning */
+.stat { display: flex; justify-content: space-between; font-size: 13px; font-weight: 500; margin-bottom: 8px; }
+.progress { height: 6px; background: var(--line); border-radius: 6px; overflow: hidden; margin-bottom: 18px; }
+.progress i { display: block; height: 100%; width: 0; background: var(--violet); transition: width .4s ease; }
+.bar { height: 10px; border-radius: 6px; margin-top: 10px; background: linear-gradient(90deg, #e6e8ef 25%, #f1f2f7 50%, #e6e8ef 75%); background-size: 200% 100%; animation: shimmer 1.2s linear infinite; }
+.bar:nth-of-type(2) { width: 88%; } .bar:nth-of-type(3) { width: 62%; }
+@keyframes shimmer { to { background-position: -200% 0; } }
+
+/* Done */
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chip { font-size: 12px; padding: 3px 10px; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); }
+.rows { display: flex; flex-direction: column; gap: 2px; margin: 0 -8px; }
+.row { display: grid; grid-template-columns: 22px minmax(0,1fr) auto; gap: 10px; align-items: start; padding: 8px; border-radius: 8px; cursor: pointer; background: none; border: 0; text-align: left; width: 100%; }
+.row:hover, .row:focus-visible { background: var(--violet-soft); outline: none; }
+.row svg { width: 18px; height: 18px; margin-top: 2px; color: var(--muted); }
+.row.risk svg { color: var(--warn); } .row.good svg { color: var(--ok); }
+.row .t { font-weight: 500; font-size: 14px; display: block; }
+.row .d { display: block; font-size: 13px; color: var(--muted); }
+.tag { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px; white-space: nowrap; margin-top: 2px; }
+.tag.risk { background: var(--warn-soft); color: var(--warn); }
+.tag.good { background: var(--ok-soft); color: var(--ok); }
+
+@media (max-width: 900px) {
+  .viewport { height: 720px; }
+  .panel { position: absolute; top: 0; right: 0; bottom: 0; width: min(420px, 100%); transform: translateX(100%); transition: transform .35s ease; box-shadow: -12px 0 30px rgba(28,32,48,.15); border-left-width: 1px; }
+  .panel.open { width: min(420px, 100%); transform: none; }
+  .panel-inner { width: 100%; }
+  .site-nav, .article { padding-inline: 20px; }
+  .ext span.label { display: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+</style>
+
+<div class="browser">
+  <div class="toolbar">
+    <div class="dots" aria-hidden="true"><i></i><i></i><i></i></div>
+    <div class="addr"><div class="url"><b>example-app.com</b>/legal/privacy-policy</div></div>
+    <div class="bookmarks" role="toolbar" aria-label="Bookmarks bar">
+      <span class="bm">Mail</span><span class="bm">Calendar</span><span class="bm">News</span><span class="bm">Work</span>
+      <span class="spacer"></span>
+      <button class="ext" id="ext" aria-expanded="false" aria-controls="panel">
+        <span class="logo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></span>
+        <span class="label">Policy Summary</span>
+        <span class="tip" role="tooltip">Click to summarize this page</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="viewport">
+    <div class="site" id="site">
+      <div class="site-nav"><b>Example App</b><span>Features</span><span>Safety</span><span>Help</span><span>Sign up</span></div>
+      <article class="article">
+        <h1>Privacy Policy</h1>
+        <p class="upd">Last updated March 3, 2025 · Sample text</p>
+
+        <h2>1. Information we collect</h2>
+        <div class="sec" id="sec1"><p>We collect information you give us, such as your name, email, phone number, and birthday. We also collect <mark>videos, photos, and comments you post</mark>, and <mark>your contacts if you choose to sync them</mark>. Automatically, we collect your device model, IP address, and <mark class="risk">approximate location from your IP address</mark>.</p></div>
+
+        <h2>2. How we use your information</h2>
+        <div class="sec" id="sec2"><p>We use information to run the service, personalize your feed, and measure ads. <mark class="risk">We use what you watch and search to decide which ads you see.</mark> <mark>You can turn off personalized recommendations in settings.</mark></p></div>
+
+        <h2>3. Who we share it with</h2>
+        <div class="sec" id="sec3"><p>We share information with service providers who work for us, with advertising partners, and with other users based on your settings. <mark class="risk">We may share your data with companies in our corporate group.</mark> We may also disclose information when the law requires it.</p></div>
+
+        <h2>4. Your choices and rights</h2>
+        <div class="sec" id="sec4"><p><mark>You can download a copy of your data, make your account private, and delete your account from settings.</mark> Depending on where you live, you may have extra rights to access or correct your information.</p></div>
+
+        <h2>5. How long we keep it</h2>
+        <div class="sec" id="sec5"><p>We keep account data while your account is active. <mark class="risk">Some records are kept for up to 18 months after you delete your account.</mark></p></div>
+
+        <h2>6. Changes to this policy</h2>
+        <div class="sec" id="sec6"><p><mark class="risk">We may update this policy at any time.</mark> We will notify you of material changes in the app, and continued use means you accept them.</p></div>
+      </article>
+    </div>
+
+    <aside class="panel" id="panel" data-state="ready" aria-label="Policy Summary">
+      <div class="panel-inner">
+        <div class="p-head">
+          <h2>Summary</h2>
+          <button class="rescan" id="rescan" disabled><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11a8 8 0 10-2.3 5.7"/><path d="M20 4v7h-7"/></svg>Rescan</button>
+          <button class="close" id="close" aria-label="Close summary">×</button>
+        </div>
+        <div class="p-body">
+
+          <div data-view="ready" class="ready">
+            <div class="badge"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l8 3v6c0 4.5-3.2 8-8 9-4.8-1-8-4.5-8-9V6z"/><path d="M8.5 12l2.5 2.5 4.5-5"/></svg></div>
+            <h3>Ready to read this policy</h3>
+            <p>Click Start to summarize this privacy policy.</p>
+            <button class="primary" id="start">Start</button>
+            <p class="page-note">Reading: example-app.com/legal/privacy-policy</p>
+          </div>
+
+          <div data-view="scanning">
+            <div class="stat"><span id="statText">Scanning section 1 of 6</span><span id="statPct">0%</span></div>
+            <div class="progress"><i id="bar"></i></div>
+            <div class="card"><h3>Reading the policy…</h3><div class="bar"></div><div class="bar"></div><div class="bar"></div></div>
+            <div class="card"><div class="bar"></div><div class="bar"></div></div>
+          </div>
+
+          <div data-view="done">
+            <div class="card">
+              <h3>What you're agreeing to</h3>
+              <p>This policy lets Example App <b>collect your profile, content, and approximate location</b>, <b>use your activity to target ads</b>, and <b>share data with companies in its corporate group</b>. You can download or delete your data at any time. <b>5 items</b> deserve a closer look.</p>
+            </div>
+            <div class="card">
+              <h3>Data collected</h3>
+              <div class="chips"><span class="chip">Name &amp; email</span><span class="chip">Phone</span><span class="chip">Birthday</span><span class="chip">Videos &amp; photos</span><span class="chip">Contacts (optional)</span><span class="chip">Device &amp; IP</span><span class="chip">Approx. location</span></div>
+            </div>
+            <div class="card">
+              <h3>Needs your attention</h3>
+              <div class="rows">
+                <button class="row risk" data-target="sec1"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.2 7-11a7 7 0 10-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg><div><span class="t">Location from your IP</span><span class="d">Approximate area, collected automatically.</span></div><span class="tag risk">Section 1</span></button>
+                <button class="row risk" data-target="sec2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12h4l3-8 4 16 3-8h4"/></svg><div><span class="t">Activity used to target ads</span><span class="d">What you watch and search shapes your ads.</span></div><span class="tag risk">Section 2</span></button>
+                <button class="row risk" data-target="sec3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="6" r="2.5"/><circle cx="18" cy="18" r="2.5"/><path d="M8 11l8-4M8 13l8 4"/></svg><div><span class="t">Shared within the corporate group</span><span class="d">Other companies owned by the same parent.</span></div><span class="tag risk">Section 3</span></button>
+                <button class="row risk" data-target="sec5"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><div><span class="t">Kept 18 months after deletion</span><span class="d">Some records remain after you delete your account.</span></div><span class="tag risk">Section 5</span></button>
+                <button class="row risk" data-target="sec6"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 4h14v16H5z"/><path d="M9 9h6M9 13h6M9 17h3"/></svg><div><span class="t">Policy can change anytime</span><span class="d">Continued use counts as accepting changes.</span></div><span class="tag risk">Section 6</span></button>
+              </div>
+            </div>
+            <div class="card">
+              <h3>Your controls</h3>
+              <div class="rows">
+                <button class="row good" data-target="sec4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg><div><span class="t">Download your data</span><span class="d">Request a copy from settings.</span></div><span class="tag good">Section 4</span></button>
+                <button class="row good" data-target="sec4"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 018 0v3"/></svg><div><span class="t">Make your account private</span><span class="d">Choose who can see your content.</span></div><span class="tag good">Section 4</span></button>
+                <button class="row good" data-target="sec2"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h10M18 7h2M4 17h2M10 17h10"/><circle cx="16" cy="7" r="2"/><circle cx="8" cy="17" r="2"/></svg><div><span class="t">Turn off personalized feed</span><span class="d">Optional, in settings.</span></div><span class="tag good">Section 2</span></button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<script>
+(function () {
+  var panel = document.getElementById('panel');
+  var ext = document.getElementById('ext');
+  var site = document.getElementById('site');
+  var secs = [].slice.call(document.querySelectorAll('.sec'));
+  var rescan = document.getElementById('rescan');
+  var bar = document.getElementById('bar');
+  var statText = document.getElementById('statText');
+  var statPct = document.getElementById('statPct');
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var timer = null;
+
+  function setOpen(open) {
+    panel.classList.toggle('open', open);
+    ext.setAttribute('aria-expanded', String(open));
+    ext.classList.remove('hint');
+  }
+  function setState(s) { panel.dataset.state = s; rescan.disabled = s !== 'done'; }
+
+  function finish() {
+    secs.forEach(function (s) { s.dataset.state = 'done'; });
+    setState('done');
+  }
+  function scan() {
+    clearTimeout(timer);
+    secs.forEach(function (s) { delete s.dataset.state; s.dataset.state = 'wait'; });
+    bar.style.width = '0'; statPct.textContent = '0%';
+    setState('scanning');
+    if (reduce) { finish(); return; }
+    var i = 0;
+    (function step() {
+      if (i > 0) secs[i - 1].dataset.state = 'done';
+      if (i >= secs.length) { finish(); return; }
+      secs[i].dataset.state = 'scan';
+      secs[i].scrollIntoView({ block: 'center', behavior: 'smooth' });
+      statText.textContent = 'Scanning section ' + (i + 1) + ' of ' + secs.length;
+      var pct = Math.round((i + 1) / secs.length * 100);
+      bar.style.width = pct + '%'; statPct.textContent = pct + '%';
+      i++;
+      timer = setTimeout(step, 700);
+    })();
+  }
+  function reset() {
+    clearTimeout(timer);
+    secs.forEach(function (s) { s.removeAttribute('data-state'); });
+    setState('ready');
+  }
+
+  ext.addEventListener('click', function () { setOpen(!panel.classList.contains('open')); });
+  document.getElementById('close').addEventListener('click', function () { setOpen(false); });
+  document.getElementById('start').addEventListener('click', scan);
+  rescan.addEventListener('click', scan);
+
+  document.querySelectorAll('.row').forEach(function (r) {
+    r.addEventListener('click', function () {
+      var t = document.getElementById(r.dataset.target);
+      if (!t) return;
+      t.scrollIntoView({ block: 'center', behavior: reduce ? 'auto' : 'smooth' });
+      t.classList.remove('flash'); void t.offsetWidth; t.classList.add('flash');
+    });
+  });
+
+  // Demo: the toolbar icon is pointed out, then the panel slides in as if it had been clicked.
+  reset();
+  if (reduce) { setOpen(true); }
+  else {
+    ext.classList.add('hint');
+    setTimeout(function () { setOpen(true); }, 900);
+  }
+})();
+</script>
